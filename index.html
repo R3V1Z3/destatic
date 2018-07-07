@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.0/markdown-it.min.js"></script>
+
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <title>Destatic</title>
+</head>
+
+<body id="custom">
+
+    <a href="//github.com/Ugotsta/destatic">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+            alt="Fork me on GitHub">
+    </a>
+
+    <!-- Outer wrapper -->
+    <div id="wrapper">
+    </div>
+
+    <script>
+        // global variable for data that persists across code blocks
+        var thispage = {};
+
+        // create instance of EvalBook
+        const ebook = new Destatic('#wrapper', {
+            title: 'Destatic',
+            content: 'README.md', // initial content to use if no content paramater is provided
+            callback: done
+        });
+
+        function done() {
+            // use this to execute any custom code after everything's rendered
+            console.log('Callback executed.');
+        }
+    </script>
+</body>
+
+</html>

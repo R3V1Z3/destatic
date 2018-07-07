@@ -1,5 +1,4 @@
-# Destatic
-Dynamically static websites through Markdown templates.
+[header](templates/header.md)
 
 ## How do I use it?
 Dead simple, just fork [the repo](https://github.com/Ugotsta/destatic) and edit this Markdown file and any others you wish to change.
@@ -18,3 +17,5 @@ Further, inline JavaScript is evaluated. For example:
 var weird = 'weird.';
 return 'This is ' + weird;
 ```
+
+[footer](templates/footer.md)

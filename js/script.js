@@ -7,14 +7,14 @@
 class Destatic {
     
     constructor( el, options ) {
-        const eb = this;
+        const destatic = this;
         this.wrapper = el;
         this.md = options['content'];
         this.callback = options['callback'];
-        eb.main();
+        destatic.entry();
     }
 
-    main() {
+    entry() {
         // check if user provided a content url parameter
         let params = (new URL(location)).searchParams;
         if (params.has('content') ) this.md = params.get('content');
@@ -22,13 +22,52 @@ class Destatic {
 
         // get content through promise
         this.get(this.md)
-            .then(data => this.process(data))
+            .then(data => this.initial_content(data))
             .catch(reason => console.log(reason.message));
     }
 
-    process(data) {
+    async get (file) {
+        // await response of fetch call
+        let response = await fetch(file);
+        // only proceed once promise is resolved
+        return await response.text();
+    }
+
+    initial_content(data) {
         // render the markdown
         this.render( data, this.wrapper );
+
+        let urls = [];
+        // now we'll get all links to /templates/ folder with .md extension
+        let links = document.querySelectorAll('a');
+        links.forEach( el=> {
+            let url = el.href;
+            let id = el.textContent;
+            if ( !url.includes('/templates/') ) return;
+            if ( !url.endsWith('.md') ) return;
+            let tag = 'div';
+            if ( id === 'header' || id === 'footer' ) tag = id;
+            // replace parent with div containing id
+            el.parentNode.outerHTML = `<${tag} id="${id}" />`;
+            urls.push([id, url]);
+        });
+
+        urls.forEach( (item, i) => {
+            // get url through promise
+            let flag = ( i === urls.length - 1);
+            let id = item[0], url = item[1];
+            this.get(url)
+                .then(data => this.process_template_parts(id, data, flag) )
+                .catch(reason => console.log(reason.message));
+        })
+    }
+
+    process_template_parts(id, data, flag) {
+        this.render( data, '#' + id );
+        if (flag) this.after_template_parts();
+    }
+
+    after_template_parts() {
         // eval code blocks
         this.do_eval(this.wrapper);
         // finally call user provided callback
@@ -75,13 +114,6 @@ class Destatic {
             el.innerHTML = `${eval(fn)}`;
         }
         return;
-    }
-
-    async get (file) {
-        // await response of fetch call
-        let response = await fetch(file);
-        // only proceed once promise is resolved
-        return await response.text();
     }
 
     render( content, container ) {

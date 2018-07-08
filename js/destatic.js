@@ -9,15 +9,17 @@ class Destatic {
     constructor( el, options ) {
         const destatic = this;
         this.wrapper = el;
-        this.md = options['content'];
+        this.theme = options['theme'];
+        if ( this.theme === null ) this.theme = 'destatic';
+        if ( this.theme === '' ) this.theme = 'destatic';
+        this.md = 'themes/' + this.theme + `/index.md`;
         this.callback = options['callback'];
-        destatic.entry();
+        this.entry();
     }
 
     entry() {
         // check if user provided a content url parameter
         let params = (new URL(location)).searchParams;
-        if (params.has('content') ) this.md = params.get('content');
         // TODO: need error handler here to handle user providing content param that doesn't exist
 
         // get content through promise
@@ -38,12 +40,12 @@ class Destatic {
         this.render( data, this.wrapper );
 
         let urls = [];
-        // now we'll get all links to /templates/ folder with .md extension
+        // now we'll get all links to /themes/ folder with .md extension
         let links = document.querySelectorAll('a');
         links.forEach( el=> {
             let url = el.href;
             let id = el.textContent;
-            if ( !url.includes('/templates/') ) return;
+            if ( !url.includes('/themes/') ) return;
             if ( !url.endsWith('.md') ) return;
             let tag = 'div';
             if ( id === 'header' || id === 'footer' ) tag = id;
@@ -93,12 +95,8 @@ class Destatic {
             if ( !parent.classList.contains('hljs') ) return;
             if ( !parent.classList.contains('js') ) return;
             // render tags in new P tag
-            let display = document.createElement('p');
-            display.classList.add('result');
-            // create new function for code block
             const fn = `(function() {${el.textContent}\n}())`;
-            display.innerHTML = `Result: ${eval(fn)}`;
-            parent.append(display);
+            parent.outerHTML = `${eval(fn)}`;
         } else {
             // only act if inline code block begins with 'js '
             let code = el.textContent;
@@ -109,15 +107,12 @@ class Destatic {
             el.classList.add('result');
             // create new function for code block
             const fn = `(function() {${code}\n}())`;
-            // store original code in data element in html
-            el.setAttribute('data-code', code);
             el.innerHTML = `${eval(fn)}`;
         }
         return;
     }
 
     render( content, container ) {
-
         // markdownit options
         var md = window.markdownit({
             html: false, // Enable HTML - Keep as false for security
@@ -142,6 +137,6 @@ class Destatic {
         
         var c = document.querySelector(container);
         if ( c !== null ) c.innerHTML = md.render(content);
-    };
+    }
 
 }

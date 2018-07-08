@@ -1,8 +1,5 @@
-# Destatic
-The dynamically static web
-
 ## How do I use it?
-Dead simple, just fork [the repo](https://github.com/Ugotsta/destatic) and edit the Markdown files as you need.
+Dead simple, just fork [the repo](https://github.com/Ugotsta/destatic) and edit this Markdown file and any others you wish to change.
 
 ## How to I add pages?
 Create new Markdown files and access them using the 'content=_yourfile_' url parameter.

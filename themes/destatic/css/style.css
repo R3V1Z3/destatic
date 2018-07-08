@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald|Raleway');
+
+body {
+    font-size: 100%;
+    font-family: 'Raleway', sans-serif;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fira Code iScript', sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+header#header pre {
+    font-size: 1vw;
+    line-height: 1.15;
+    overflow: hidden;
+}
+
+pre, code {
+    font-family: 'Fira Code iScript', monospace;
+}
+
+#wrapper {
+    margin: 0 4em;
+    padding: 1em;
+}
+
+.result {
+    background-color: #777;
+    padding: 0.5em;
+    color: white;
+}

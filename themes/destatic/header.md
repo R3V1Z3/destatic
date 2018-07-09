@@ -1,4 +1,4 @@
-```js
+```
 let h = '<pre><code>';
 h += '██████╗ ███████╗███████╗████████╗ █████╗ ████████╗██╗ ██████╗\n';
 h += '██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔════╝\n';
@@ -10,9 +10,3 @@ h += '....: the statically dynamic monstrocity for web making :....';
 h += '</code></pre>';
 return h;
 ```
-
-Nav
-- Home
-- The Basics
-- Templates
-- About

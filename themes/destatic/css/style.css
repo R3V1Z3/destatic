@@ -3,7 +3,6 @@
 body {
     font-size: 100%;
     font-family: 'Raleway', sans-serif;
-
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -13,9 +12,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 header#header pre {
-    font-size: 1vw;
+    font-size: 1.5vw;
     line-height: 1.15;
     overflow: hidden;
+    background: none;
 }
 
 pre, code {

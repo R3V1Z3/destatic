@@ -8,20 +8,30 @@ class Destatic {
     
     constructor( el, options ) {
         const destatic = this;
+        this.options = options;
         this.wrapper = el;
         this.theme = options['theme'];
         if ( this.theme === null ) this.theme = 'destatic';
         if ( this.theme === '' ) this.theme = 'destatic';
+        this.css = 'themes/' + this.theme + `/css/style.css`;
         this.md = 'themes/' + this.theme + `/index.md`;
         this.callback = options['callback'];
         this.entry();
+    }
+
+    site_name() {
+        return this.options['title'];
     }
 
     entry() {
         // check if user provided a content url parameter
         let params = (new URL(location)).searchParams;
         // TODO: need error handler here to handle user providing content param that doesn't exist
-
+        // load theme styling
+        // get content through promise
+        this.get(this.css)
+            .then(data => this.append_style('style', 'theme', data))
+            .catch(reason => console.log(reason.message));
         // get content through promise
         this.get(this.md)
             .then(data => this.initial_content(data))
@@ -33,6 +43,27 @@ class Destatic {
         let response = await fetch(file);
         // only proceed once promise is resolved
         return await response.text();
+    }
+
+    /**
+     * Add style to head either inline or external stylesheet
+     * @param {string} type link or style
+     * @param {string} id so we can alter href later
+     * @param {string} content either href or actual style content
+     */
+    append_style( type, id, content ){
+        if ( type === 'link' ){
+            let s  = document.createElement(type);
+            s.type = 'text/css';
+            if ( id !== null ) s.id = id;
+            s.rel  = 'stylesheet';
+            s.href = content;
+            document.head.appendChild(s);
+        } else if ( type === 'style' ) {
+            const div = document.createElement("div");
+            div.innerHTML = `<style id="${id}">${content}</style>`;
+            document.head.appendChild(div);
+        }
     }
 
     initial_content(data) {
@@ -95,19 +126,22 @@ class Destatic {
             if ( !parent.classList.contains('hljs') ) return;
             if ( !parent.classList.contains('js') ) return;
             // render tags in new P tag
-            const fn = `(function() {${el.textContent}\n}())`;
-            parent.outerHTML = `${eval(fn)}`;
+            let fn = `(function() {${el.textContent}\n}())`;
+            let result = `${eval(fn)}`;
+            if ( result === 'undefined' ) result = '';
+            parent.outerHTML = result;
         } else {
             // only act if inline code block begins with 'js '
             let code = el.textContent;
-            if ( !code.startsWith('js ') ) return;
-            // strip 'js ' from start
-            code = code.substr(3);
+            if ( code.startsWith('js ') ) code = code.split('js ')[1];
+            if ( !code.startsWith('return ') ) code = 'return ' + code;
             // render inline
             el.classList.add('result');
             // create new function for code block
-            const fn = `(function() {${code}\n}())`;
-            el.innerHTML = `${eval(fn)}`;
+            let fn = `(function() {${code}\n}())`;
+            let result = `${eval(fn)}`;
+            if ( result === 'undefined' ) result = '';
+            el.outerHTML = result;
         }
         return;
     }

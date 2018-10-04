@@ -4,7 +4,7 @@ The dynamically static web
 ## How do I use it?
 Dead simple, just fork [the repo](https://github.com/Ugotsta/destatic) and edit the Markdown files as you need.
 
-## How to I add pages?
+## How do I add pages?
 Create new Markdown files and access them using the 'content=_yourfile_' url parameter.
 
 You can also put Markdown files in the /pages/ folder and then access them through bare url slugs like so: _ugotsta.github.io/destatic/character_.
